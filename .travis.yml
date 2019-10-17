@@ -1,0 +1,27 @@
+language: python
+python:
+- '3.7'
+addons:
+  postgresql: '9.6'
+install:
+- pip3 install -r requirements.txt
+- pip3 install coverage
+before_script:
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64>
+  ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+script:
+- python3 manage.py migrate
+- coverage run --source='.' ./manage.py test
+- coverage report
+after_success:
+- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+- zappa update
+before_install:
+- openssl aes-256-cbc -K $encrypted_4b566e1d9238_key -iv $encrypted_4b566e1d9238_iv
+  -in zappa_settings.json.enc -out zappa_settings.json -d
+env:
+  global:
+  - secure: GXpqnxwUh1y+OgINpp5TxNFL0KGZpchnMQ8sEgjDnXuetZLJSNW3XyWnB19FBidg6s6tdL/cj75gMqPPkyapJs0cCYxSzSx5sZ9pT++z7dBvec7HytZR6PFIzmL+d999967LnXqvDsJP3scTXH1JCpZ3PO4uBFtRdep04fToKxLKQzt12c0HM52Vq5Y7stRiWWPWPDjgndt9vBcikIM/VXyFrb8mKczHQWvqFbkmEJuUtTxxXX/j4zl4kJGu5i33WoaKLyszi71ubH4WGU7YXqVN4X/SumAWCngodC9iA9X414vfEdTHgdaEBlWl0aYYmj53flUFwsgkhOaG+Uuhk8rr7j790bSoI9h3ICK3abod0dtTH92GSSz3IU9iL07q/I3A1frsKmioYN2JKMzFP7+zRGQYYiV3pLhtFr/IuJxW7R5PuZItsV3CedfnH+CU4qcTcKMf8x8q5cl0TnSENI5rwcdO0gLfZHBdOlmzwtliS0PINuz8mdAoWd0SJE0yGR6hQcCn3bULXhn19pUN56e7vyzXcwVmRos9oU/9bk/uNVT+9mzw0YZT59ufCpXiuU2qJiC3U8tqz170rSOfWjnXTpQ6CMZSXUBlI19DD7Qj7vj9wDvpwlD1yTNJfpt2Z78KAztqq3HQpYsxIo/HGN3UmF1NDVJGlHrMY7WwsTE=
+  - secure: enbXWmlD7dvQ0TjBbaf73MpYFsWFrP4OLT9JhgU6i42xNZGqpYdqnoFJlxUt/bsj7fOAkYaLwBd/r9hKLB4wZzUKa3sqDN4LdETUtkcXKqX2x5KRAKH8pU5U+vohOsKgl+QMqix6LwgAqwFC58b6CebEbaP0nRcUb/amEcUKAsK6JT/WdE0Sw7xS78yA5Tu1uj/poLfhwJcWTNbc2BpLGFKYbpQmTHx/rt+jzxH7Moh2Y9TU20+lsaExJjEg6hpD2U47DZieholgYrUqd9ZAb6Va/FMwlzU3WIFvbTQaIp8aHI0sxLU8B9oS0k3L+/4+ugL4Cf8tWvD/nSFZnB1U13gugTmwe85PkmLq/lymbsBePt7ou/ObuHZeDhi6AyXu140oXYT2LX7PxVh1uaVSxlMI6JrvePtz0HMtHjixyIXJYte1ef3jtCxojAuRVHo1HqethForDRKcIxuqHHnbdvqKpc3TkCu6PJ4MJoUXfGKeFwy+gV42BwqaVmzmRlRPEJJKb+3sq5caDgJeKk1mIEy6E59UnCF+iL4zqNul8vm+sUcg09h83YyZVUBfYgkE2mFlnOZh5fizGUhFXIoR7vfWn/kM5hJL2QyKeoF8lw3neJxgkNQ9pocJcelky8pro7NohDCUIacbh/rEZgkZt6wfH1GVm8+ngvukMEFmxx4=
